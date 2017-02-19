@@ -14,3 +14,8 @@ docker run --rm --workdir=/data -v $(pwd):/data ansible terraform-inventory --in
 
 
 ssh-keygen -t rsa -C "aws_instance_rsakey" -P '' -f ssh/aws_instance_rsakey
+
+launch ansible cmd
+
+/etc/ansible/hosts
+--private-key

@@ -28,6 +28,7 @@ resource "aws_instance" "example" {
 
   tags = {
     Owner = "ylorenzati"
+    Name = "yli_terraform"
   }
 
   connection {
