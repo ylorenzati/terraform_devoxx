@@ -1,0 +1,3 @@
+variable "fullenv" {
+  type = "list"
+}
