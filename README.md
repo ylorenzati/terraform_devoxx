@@ -10,7 +10,7 @@ terraform show
 terraform destroy
 
 # inventory
-docker run --rm --workdir=/data -v $(pwd):/data ansible terraform-inventory --inventory > inventory.tmp
+docker run --rm --workdir=/data -v $(pwd):/data ansible terraform-inventory --inventory > terraform101.inventory
 
 
 ssh-keygen -t rsa -C "aws_instance_rsakey" -P '' -f ssh/aws_instance_rsakey
