@@ -20,4 +20,13 @@
 
     # dont use docker_image module because there is a bug with py3 (already fix in develop branch)
     - name: pull image
-      shell: docker pull ubuntu:latest
+      shell: docker pull ylorenzati/mygoapp
+
+    # don't use docker_container module because there is a bug with py3 (already fix in develop branch)
+    - name: docker ps goapp
+      shell: docker ps -f name=goapp
+      register: result
+
+    - name: start container
+      shell: docker run -d -t -p 8080:8080 --name goapp -h {{ ansible_hostname }} ylorenzati/mygoapp
+      when: result.stdout.find('goapp') == -1
