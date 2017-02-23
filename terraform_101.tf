@@ -83,3 +83,15 @@ resource "aws_elb" "goapplb" {
     Owner = "ylorenzati"
   }
 }
+
+resource "aws_route53_record" "www" {
+  zone_id = "Z28O5PDK1WPCSR"
+  name = "mygoapp"
+  type = "A"
+
+  alias {
+    name = "${aws_elb.goapplb.dns_name}"
+    zone_id = "${aws_elb.goapplb.zone_id}"
+    evaluate_target_health = true
+  }
+}
