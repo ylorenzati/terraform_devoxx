@@ -1,5 +1,5 @@
 provider "aws" {
-  region     = "eu-west-1"
+  region = "eu-west-1"
   shared_credentials_file = "/credentials"
 }
 
@@ -8,10 +8,13 @@ data "aws_ami" "ubuntu" {
   most_recent = true
   filter {
     name = "name"
-    values = ["ubuntu/images/ebs-ssd/ubuntu-xenial-16.04-amd64-server-*"]
+    values = [
+      "ubuntu/images/ebs-ssd/ubuntu-xenial-16.04-amd64-server-*"]
   }
 
-  owners = ["099720109477"] # Canonical
+  owners = [
+    "099720109477"]
+  # Canonical
 }
 
 
@@ -31,19 +34,19 @@ resource "aws_security_group" "goappsg" {
   }
 }
 
-resource "aws_key_pair" "aws_instance_rsakey" {
+resource "aws_key_pair" "goapp" {
   key_name = "deployer-key"
   public_key = "${file("ssh/aws_instance_rsakey.pub")}"
 }
 
 
-resource "aws_instance" "example" {
+resource "aws_instance" "goapp" {
   ami = "${data.aws_ami.ubuntu.id}"
   instance_type = "m3.medium"
-  key_name = "${aws_key_pair.aws_instance_rsakey.key_name}"
+  key_name = "${aws_key_pair.goapp.key_name}"
   security_groups = [
     "${aws_security_group.goappsg.name}"]
-  count = 2
+  count = "${var.node_count}"
 
 
   tags = {
@@ -63,11 +66,11 @@ resource "aws_instance" "example" {
   }
 }
 
-resource "aws_elb" "goapplb" {
+resource "aws_elb" "goapp" {
 
   name = "goapplb"
   availability_zones = [
-    "${element(aws_instance.example.*.availability_zone, count.index)}"]
+    "${element(aws_instance.goapp.*.availability_zone, count.index)}"]
 
   listener {
     instance_port = 8080
@@ -77,21 +80,21 @@ resource "aws_elb" "goapplb" {
   }
 
   instances = [
-    "${aws_instance.example.*.id}"]
+    "${aws_instance.goapp.*.id}"]
 
   tags = {
     Owner = "ylorenzati"
   }
 }
 
-resource "aws_route53_record" "www" {
-  zone_id = "Z28O5PDK1WPCSR"
+resource "aws_route53_record" "goapp" {
+  zone_id = "${var.zone_id_xebia}"
   name = "mygoapp"
   type = "A"
 
   alias {
-    name = "${aws_elb.goapplb.dns_name}"
-    zone_id = "${aws_elb.goapplb.zone_id}"
+    name = "${aws_elb.goapp.dns_name}"
+    zone_id = "${aws_elb.goapp.zone_id}"
     evaluate_target_health = true
   }
 }
