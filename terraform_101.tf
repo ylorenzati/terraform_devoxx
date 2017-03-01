@@ -23,8 +23,7 @@ resource "aws_security_group" "goapp" {
 
   ingress {
     from_port = 0
-    # TODO max port here
-    to_port = 10000
+    to_port = 65535
     protocol = "tcp"
     cidr_blocks = [
       "0.0.0.0/0"]
@@ -72,7 +71,7 @@ resource "aws_elb" "goapp" {
 
   # refactor this
   availability_zones = [
-    "${element(aws_instance.goapp.*.availability_zone, count.index)}"]
+    "${aws_instance.goapp.*.availability_zone}"]
 
 
   listener {
@@ -80,6 +79,14 @@ resource "aws_elb" "goapp" {
     instance_protocol = "tcp"
     lb_port = 80
     lb_protocol = "tcp"
+  }
+
+  health_check {
+    healthy_threshold = 2
+    unhealthy_threshold = 5
+    target = "TCP:8080"
+    interval = 5
+    timeout = 4
   }
 
   instances = [
