@@ -12,8 +12,7 @@ data "aws_ami" "ubuntu" {
       "ubuntu/images/ebs-ssd/ubuntu-xenial-16.04-amd64-server-*"]
   }
 
-  owners = [
-    "099720109477"]
+  owners = ["099720109477"]
   # Canonical
 }
 
