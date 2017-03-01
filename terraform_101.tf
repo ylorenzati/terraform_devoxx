@@ -96,8 +96,12 @@ resource "aws_elb" "goapp" {
   }
 }
 
+data "aws_route53_zone" "xebia_dns" {
+  name = "aws.xebiatechevent.info."
+}
+
 resource "aws_route53_record" "goapp" {
-  zone_id = "${var.zone_id_xebia}"
+  zone_id = "${data.aws_route53_zone.xebia_dns.id}"
   name = "goapp"
   type = "A"
 

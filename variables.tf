@@ -8,10 +8,6 @@ variable "owner" {
   default = "ylorenzati"
 }
 
-variable "zone_id_xebia" {
-  type = "string"
-}
-
 variable "node_count" {
   type = "string"
   default = "1"
