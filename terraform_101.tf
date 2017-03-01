@@ -18,11 +18,12 @@ data "aws_ami" "ubuntu" {
 }
 
 
-resource "aws_security_group" "goappsg" {
+resource "aws_security_group" "goapp" {
   name = "goappsg"
 
   ingress {
     from_port = 0
+    # TODO max port here
     to_port = 10000
     protocol = "tcp"
     cidr_blocks = [
@@ -30,12 +31,12 @@ resource "aws_security_group" "goappsg" {
   }
 
   tags = {
-    Owner = "ylorenzati"
+    Owner = "${var.owner}"
   }
 }
 
 resource "aws_key_pair" "goapp" {
-  key_name = "deployer-key"
+  key_name = "goapp-key"
   public_key = "${file("ssh/aws_instance_rsakey.pub")}"
 }
 
@@ -45,14 +46,8 @@ resource "aws_instance" "goapp" {
   instance_type = "m3.medium"
   key_name = "${aws_key_pair.goapp.key_name}"
   security_groups = [
-    "${aws_security_group.goappsg.name}"]
+    "${aws_security_group.goapp.name}"]
   count = "${var.node_count}"
-
-
-  tags = {
-    Owner = "ylorenzati"
-    Name = "yli_terraform_instance"
-  }
 
   connection {
     user = "ubuntu"
@@ -64,13 +59,21 @@ resource "aws_instance" "goapp" {
       "sleep 1"
     ]
   }
+
+  tags = {
+    Owner = "${var.owner}"
+    Name = "yli_terraform_instance"
+  }
 }
 
 resource "aws_elb" "goapp" {
 
   name = "goapplb"
+
+  # refactor this
   availability_zones = [
     "${element(aws_instance.goapp.*.availability_zone, count.index)}"]
+
 
   listener {
     instance_port = 8080
@@ -83,13 +86,13 @@ resource "aws_elb" "goapp" {
     "${aws_instance.goapp.*.id}"]
 
   tags = {
-    Owner = "ylorenzati"
+    Owner = "${var.owner}"
   }
 }
 
 resource "aws_route53_record" "goapp" {
   zone_id = "${var.zone_id_xebia}"
-  name = "mygoapp"
+  name = "goapp"
   type = "A"
 
   alias {
