@@ -8,8 +8,7 @@ data "aws_ami" "ubuntu" {
   most_recent = true
   filter {
     name = "name"
-    values = [
-      "ubuntu/images/ebs-ssd/ubuntu-xenial-16.04-amd64-server-*"]
+    values = ["ubuntu/images/ebs-ssd/ubuntu-xenial-16.04-amd64-server-*"]
   }
 
   owners = ["099720109477"]
@@ -97,7 +96,7 @@ resource "aws_elb" "goapp" {
 }
 
 data "aws_route53_zone" "xebia_dns" {
-  name = "aws.xebiatechevent.info."
+  name = "${var.xebia_dns}"
 }
 
 resource "aws_route53_record" "goapp" {
