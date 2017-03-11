@@ -21,8 +21,4 @@ elb
 route53
 demo
 
-
-
-
-
 5 minutes de question / pour aller plus loin
