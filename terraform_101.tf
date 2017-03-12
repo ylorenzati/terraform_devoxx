@@ -3,6 +3,7 @@
 
 provider "aws" {
   region = "${var.aws_region}"
+  //shared_credentials_file = "/credentials"
 }
 
 
@@ -56,51 +57,5 @@ resource "aws_instance" "goapp" {
 
   tags = {
     Owner = "${var.owner}"
-  }
-}
-
-resource "aws_elb" "goapp" {
-
-  # refactor this
-  availability_zones = [
-    "${aws_instance.goapp.*.availability_zone}"]
-
-
-  listener {
-    instance_port = 8080
-    instance_protocol = "tcp"
-    lb_port = 80
-    lb_protocol = "tcp"
-  }
-
-  health_check {
-    healthy_threshold = 2
-    unhealthy_threshold = 5
-    target = "TCP:8080"
-    interval = 5
-    timeout = 4
-  }
-
-  instances = [
-    "${aws_instance.goapp.*.id}"]
-
-  tags = {
-    Owner = "${var.owner}"
-  }
-}
-
-data "aws_route53_zone" "xebia_dns" {
-  name = "${var.xebia_dns}"
-}
-
-resource "aws_route53_record" "goapp" {
-  zone_id = "${data.aws_route53_zone.xebia_dns.id}"
-  name = "goapp"
-  type = "A"
-
-  alias {
-    name = "${aws_elb.goapp.dns_name}"
-    zone_id = "${aws_elb.goapp.zone_id}"
-    evaluate_target_health = true
   }
 }
