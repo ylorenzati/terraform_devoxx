@@ -1,6 +1,5 @@
 provider "aws" {
-  region = "eu-west-1"
-  //shared_credentials_file = "/credentials"
+  region = "${var.aws_region}"
 }
 
 
@@ -8,16 +7,15 @@ data "aws_ami" "ubuntu" {
   most_recent = true
   filter {
     name = "name"
-    values = ["ubuntu/images/ebs-ssd/ubuntu-xenial-16.04-amd64-server-*"]
+    values = ["${var.ami_search_path}"]
   }
 
-  owners = ["099720109477"]
+  owners = ["${var.ami_owner}"]
   # Canonical
 }
 
 
 resource "aws_security_group" "goapp" {
-  name = "goappsg"
 
   ingress {
     from_port = 0
@@ -32,8 +30,7 @@ resource "aws_security_group" "goapp" {
 }
 
 resource "aws_key_pair" "goapp" {
-  key_name = "goapp-key"
-  public_key = "${file("ssh/aws_instance_rsakey.pub")}"
+  public_key = "${file("ssh/rsakey.pub")}"
 }
 
 
@@ -47,7 +44,7 @@ resource "aws_instance" "goapp" {
 
   connection {
     user = "ubuntu"
-    private_key = "${file("ssh/aws_instance_rsakey")}"
+    private_key = "${file("ssh/rsakey")}"
   }
 
   provisioner "remote-exec" {
@@ -58,13 +55,10 @@ resource "aws_instance" "goapp" {
 
   tags = {
     Owner = "${var.owner}"
-    Name = "yli_terraform_instance"
   }
 }
 
 resource "aws_elb" "goapp" {
-
-  name = "goapplb"
 
   # refactor this
   availability_zones = [
