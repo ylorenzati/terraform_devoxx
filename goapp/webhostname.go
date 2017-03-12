@@ -21,7 +21,7 @@ func main() {
 
 	// Create a server listening on port 8000
 	s := &http.Server{
-		Addr:    ":8000",
+		Addr:    ":8080",
 		Handler: m,
 	}
 

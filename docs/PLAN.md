@@ -1,24 +1,28 @@
 5 minutes max : Explication sur terraform et contexte
 
-disclamer : ce qui est deja fait
-* images docker des differentes technos
-* ami : numéro magique et bloc terraform
-* ansible et ansible-inventory :  passage rapide
-* aws n'est pas magique, ça peu planter
-* variable fastidieuse
 
 
+Déroulement démo
+Premier déploiement ::
+avoir préparé valeur dans commentaire pour simplifier écriture
+Déploiement basique : une instance une clef ssh
+Montrer une vue de la console aws vierge avant le premier déploiement.
 
-20 minutes de livecoding
-le provider
-1 instance : terraform apply et show
-variable et data
-le provisionner
-2ieme instance : terraform plan
-un peu de sécurité : cle ssh  et security group
-ansible & premier test d'acces a la web app
-elb
-route53
-demo
+Montrer machine dispo sur console
+Tester connexion ssh (pre configurer sssh ou rappel de commande pour rapidité)
 
-5 minutes de question / pour aller plus loin
+Deuxième déploiement :
+Ajout provider pour sleep timing
+Ajout security group (ou dans la partie précédente ? )
+Ajout deuxième instance
+
+Montrer le teraform plan
+Terraform apply
+
+Pendant apply, mise en place des variables
+Montrer dans console aws, ou terraform show la présence de 2 ip différentes
+
+Now : déployer l'app avec ansible
+Montrer / générer l'inventaire teraforum
+Montrer le playbook ansible rapidement.
+Expliquer ce qu'il fait pendant qu'il se déroule
