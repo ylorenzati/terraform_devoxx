@@ -51,9 +51,7 @@ resource "aws_instance" "goapp" {
   }
 
   provisioner "remote-exec" {
-    inline = [
-      "sleep 1"
-    ]
+    inline = "sleep 1"
   }
 
   tags = {
