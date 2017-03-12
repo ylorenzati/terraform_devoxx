@@ -1,3 +1,6 @@
+# region: eu-west-1
+# ami:    ami-7effd318
+
 provider "aws" {
   region = "${var.aws_region}"
 }
