@@ -1,5 +1,5 @@
 # region: eu-west-1
-# ami:    ami-7effd318
+# ami:    ami-fe133998
 
 provider "aws" {
   region = "${var.aws_region}"
@@ -14,12 +14,11 @@ data "aws_ami" "ubuntu" {
     values = ["${var.ami_search_path}"]
   }
 
-  owners = ["${var.ami_owner}"]
-  # Canonical
+  owners = ["${var.cannonical_owner_id}"]
 }
 
 
-resource "aws_security_group" "goapp" {
+resource "aws_security_group" "tfdevoxx" {
 
   ingress {
     from_port = 0
@@ -33,17 +32,17 @@ resource "aws_security_group" "goapp" {
   }
 }
 
-resource "aws_key_pair" "goapp" {
+resource "aws_key_pair" "tfdevoxx" {
   public_key = "${file("ssh/rsakey.pub")}"
 }
 
 
-resource "aws_instance" "goapp" {
+resource "aws_instance" "tfdevoxx" {
   ami = "${data.aws_ami.ubuntu.id}"
   instance_type = "m3.medium"
-  key_name = "${aws_key_pair.goapp.key_name}"
+  key_name = "${aws_key_pair.tfdevoxx.key_name}"
   security_groups = [
-    "${aws_security_group.goapp.name}"]
+    "${aws_security_group.tfdevoxx.name}"]
   count = "${var.node_count}"
 
   connection {
@@ -60,12 +59,10 @@ resource "aws_instance" "goapp" {
   }
 }
 
-resource "aws_elb" "goapp" {
+resource "aws_elb" "tfdevoxx" {
 
   # refactor this
-  availability_zones = [
-    "${aws_instance.goapp.*.availability_zone}"]
-
+  availability_zones = ["${aws_instance.tfdevoxx.*.availability_zone}"]
 
   listener {
     instance_port = 8080
@@ -83,7 +80,7 @@ resource "aws_elb" "goapp" {
   }
 
   instances = [
-    "${aws_instance.goapp.*.id}"]
+    "${aws_instance.tfdevoxx.*.id}"]
 
   tags = {
     Owner = "${var.owner}"
@@ -94,14 +91,14 @@ data "aws_route53_zone" "xebia_dns" {
   name = "${var.xebia_dns}"
 }
 
-resource "aws_route53_record" "goapp" {
+resource "aws_route53_record" "tfdevoxx" {
   zone_id = "${data.aws_route53_zone.xebia_dns.id}"
   name = "tfdevoxx"
   type = "A"
 
   alias {
-    name = "${aws_elb.goapp.dns_name}"
-    zone_id = "${aws_elb.goapp.zone_id}"
+    name = "${aws_elb.tfdevoxx.dns_name}"
+    zone_id = "${aws_elb.tfdevoxx.zone_id}"
     evaluate_target_health = true
   }
 }

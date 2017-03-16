@@ -13,7 +13,7 @@ variable "ami_search_path" {
   default = "ubuntu/images/ebs-ssd/ubuntu-xenial-16.04-amd64-server-*"
 }
 
-variable "ami_owner" {
+variable "cannonical_owner_id" {
   type = "string"
   default = "099720109477"
 }
