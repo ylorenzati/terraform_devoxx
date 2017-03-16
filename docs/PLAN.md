@@ -29,10 +29,9 @@ variable aws_region et utilisation avec et sans default
 Montrer dans console aws, ou terraform show la présence de 2 ip différentes
 
 data ami
-#TODO recreation d'instance bizarre, a creuser
 
 Now : déployer l'app avec ansible
-Montrer / générer l'inventaire teraforum
+Montrer / générer l'inventaire terraforum
 Montrer le playbook ansible rapidement.
 Expliquer ce qu'il fait pendant qu'il se déroule
 
