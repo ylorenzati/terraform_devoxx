@@ -30,5 +30,5 @@ variable "node_count" {
 
 variable "xebia_dns" {
   type = "string"
-  default = "aws.xebia-tech-event.info."
+  default = "techx.fr."
 }
