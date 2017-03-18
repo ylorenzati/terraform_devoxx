@@ -1,3 +1,6 @@
+# region: eu-west-1
+# ami:    ami-fe133998
+
 variable "aws_region" {
   type = "string"
   default = "eu-west-1"
