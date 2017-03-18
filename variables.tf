@@ -1,5 +1,12 @@
-# region: eu-west-1
-# ami:    ami-fe133998
+variable "aws_region" {
+  type = "string"
+  default = "eu-west-1"
+}
+
+variable "ami_ubuntu" {
+  type = "string"
+  default = "ami-7effd318"
+}
 
 variable "ami_search_path" {
   type = "string"
