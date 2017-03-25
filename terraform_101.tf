@@ -46,13 +46,14 @@ resource "aws_instance" "devoxx" {
   security_groups = ["${aws_security_group.devoxx.name}"]
   count = "${var.node_count}"
 
-  connection {
-    user = "ubuntu"
-    private_key = "${file("ssh/rsakey")}"
-  }
 
   provisioner "remote-exec" {
     inline = "sleep 1"
+
+    connection {
+      user = "ubuntu"
+      private_key = "${file("ssh/rsakey")}"
+    }
   }
 
   tags = {
