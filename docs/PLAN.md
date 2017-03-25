@@ -6,14 +6,16 @@
 
 ##
 Montrer une vue de la console aws vierge
+Parler de la structure de fichier terraform
 Le provider
-une instance AVEC TAG Owner
+une instance AVEC TAG Owner et name
 une clef ssh
+terraform plan
 terraform apply
+terraform tfstate
 Montrer une vue de la console
 terraform show + grep ip
 on se logue en ssh
-et on ping
 
 Deuxième déploiement :
 Ajout security group

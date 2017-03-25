@@ -1,9 +1,9 @@
-# region: eu-west-1
-# ami:    ami-fe133998
+# region: eu-west-2
+# ami:    ami-ed908589
 
 variable "aws_region" {
   type = "string"
-  default = "eu-west-1"
+  default = "eu-west-2"
 }
 
 variable "ami_ubuntu" {
@@ -13,7 +13,7 @@ variable "ami_ubuntu" {
 
 variable "ami_search_path" {
   type = "string"
-  default = "ubuntu/images/ebs-ssd/ubuntu-xenial-16.04-amd64-server-*"
+  default = "ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-*"
 }
 
 variable "cannonical_owner_id" {

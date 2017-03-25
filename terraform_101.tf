@@ -1,5 +1,5 @@
-# region: eu-west-1
-# ami:    ami-fe133998
+# region: eu-west-2
+# ami:    ami-ed908589
 
 provider "aws" {
   region = "${var.aws_region}"
@@ -18,7 +18,7 @@ data "aws_ami" "ubuntu" {
 }
 
 
-resource "aws_security_group" "tfdevoxx" {
+resource "aws_security_group" "devoxx" {
 
   ingress {
     from_port = 0
@@ -32,17 +32,17 @@ resource "aws_security_group" "tfdevoxx" {
   }
 }
 
-resource "aws_key_pair" "tfdevoxx" {
+resource "aws_key_pair" "devoxx" {
   public_key = "${file("ssh/rsakey.pub")}"
 }
 
 
-resource "aws_instance" "tfdevoxx" {
+resource "aws_instance" "devoxx" {
   ami = "${data.aws_ami.ubuntu.id}"
-  instance_type = "m3.medium"
-  key_name = "${aws_key_pair.tfdevoxx.key_name}"
-  security_groups = [
-    "${aws_security_group.tfdevoxx.name}"]
+  instance_type = "t2.medium"
+  key_name = "${aws_key_pair.devoxx.key_name}"
+  # security group name here
+  security_groups = ["${aws_security_group.devoxx.name}"]
   count = "${var.node_count}"
 
   connection {
@@ -59,10 +59,10 @@ resource "aws_instance" "tfdevoxx" {
   }
 }
 
-resource "aws_elb" "tfdevoxx" {
+resource "aws_elb" "devoxx" {
 
   # refactor this
-  availability_zones = ["${aws_instance.tfdevoxx.*.availability_zone}"]
+  availability_zones = ["${aws_instance.devoxx.*.availability_zone}"]
 
   listener {
     instance_port = 8080
@@ -79,8 +79,7 @@ resource "aws_elb" "tfdevoxx" {
     timeout = 4
   }
 
-  instances = [
-    "${aws_instance.tfdevoxx.*.id}"]
+  instances = ["${aws_instance.devoxx.*.id}"]
 
   tags = {
     Owner = "${var.owner}"
@@ -91,14 +90,14 @@ data "aws_route53_zone" "xebia_dns" {
   name = "${var.xebia_dns}"
 }
 
-resource "aws_route53_record" "tfdevoxx" {
+resource "aws_route53_record" "devoxx" {
   zone_id = "${data.aws_route53_zone.xebia_dns.id}"
-  name = "tfdevoxx"
+  name = "devoxx"
   type = "A"
 
   alias {
-    name = "${aws_elb.tfdevoxx.dns_name}"
-    zone_id = "${aws_elb.tfdevoxx.zone_id}"
+    name = "${aws_elb.devoxx.dns_name}"
+    zone_id = "${aws_elb.devoxx.zone_id}"
     evaluate_target_health = true
   }
 }
