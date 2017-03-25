@@ -23,7 +23,7 @@ variable "cannonical_owner_id" {
 
 variable "owner" {
   type = "string"
-  default = "ylorenzati@xebia.fr"
+  default = "ylorenzati"
 }
 
 variable "node_count" {

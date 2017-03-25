@@ -29,6 +29,7 @@ resource "aws_security_group" "devoxx" {
 
   tags = {
     Owner = "${var.owner}"
+    Name = "devoxx terraform101 slot"
   }
 }
 
@@ -56,6 +57,7 @@ resource "aws_instance" "devoxx" {
 
   tags = {
     Owner = "${var.owner}"
+    Name = "devoxx terraform101 slot"
   }
 }
 
@@ -83,6 +85,7 @@ resource "aws_elb" "devoxx" {
 
   tags = {
     Owner = "${var.owner}"
+    Name = "devoxx terraform101 slot"
   }
 }
 
