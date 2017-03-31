@@ -1,6 +1,7 @@
 # region: eu-west-2
 # ami:    ami-ed908589
 
+
 provider "aws" {
   region = "${var.aws_region}"
   //shared_credentials_file = "/credentials"
@@ -40,7 +41,7 @@ resource "aws_key_pair" "devoxx" {
 
 resource "aws_instance" "devoxx" {
   ami = "${data.aws_ami.ubuntu.id}"
-  instance_type = "t2.medium"
+  instance_type = "m3.medium"
   key_name = "${aws_key_pair.devoxx.key_name}"
   # security group name here
   security_groups = ["${aws_security_group.devoxx.name}"]
