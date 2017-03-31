@@ -1,5 +1,5 @@
-# region: eu-west-2
-# ami:    ami-ed908589
+# region: eu-west-1
+# ami:    ami-c0cff0a6
 
 variable "aws_region" {
   type = "string"
