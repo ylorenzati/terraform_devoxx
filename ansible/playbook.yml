@@ -4,29 +4,50 @@
   become: true
   tasks:
     - name: add docker repos
-      apt_repository: repo="deb https://apt.dockerproject.org/repo ubuntu-xenial main"
+      apt_repository:
+        repo: "deb https://apt.dockerproject.org/repo ubuntu-xenial main"
 
     - name: add docker keys
-      apt_key: url=https://apt.dockerproject.org/gpg
+      apt_key:
+        url: "https://apt.dockerproject.org/gpg"
 
     - name: install docker engine
-      apt: name=docker-engine update_cache=yes
+      apt:
+        name: "docker-engine"
+        update_cache: yes
 
     - name: add ubuntu to docker group
-      user: name=ubuntu groups=docker append=yes
+      user:
+        name: "ubuntu"
+        groups: "docker"
+        append: yes
 
     - name: ensure docker service is running
-      service: name=docker state=started enabled=yes
+      service:
+        name: "docker"
+        state: started
+        enabled: yes
+
+    # # # --- Contributor note ---
+    #
+    # => These issues with py3 could have been avoided by the use of the role: aurelienmaury.seed
+    #    apply this role to your hosts before doing anything else will maxmize your chances to
+    #    avoid problems like these ones.
+    #
+    # # #
 
     # dont use docker_image module because there is a bug with py3 (already fix in develop branch)
     - name: pull image
-      shell: docker pull ylorenzati/mygoapp
+      shell: >-
+        docker pull ylorenzati/mygoapp
 
     # don't use docker_container module because there is a bug with py3 (already fix in develop branch)
     - name: docker ps goapp
-      shell: docker ps -f name=goapp
+      shell: >-
+        docker ps -f name=goapp
       register: result
 
     - name: start container
-      shell: docker run -d -t -p 8080:8080 --name goapp -h {{ ansible_hostname }} ylorenzati/mygoapp
+      shell: >-
+        docker run -d -t -p 8080:8080 --name goapp -h {{ ansible_hostname }} ylorenzati/mygoapp
       when: result.stdout.find('goapp') == -1
